@@ -20,16 +20,20 @@ class GameMenu():
                 return
         self.get_settings()
         self.menuEntries = menuEntry.MenuEntry(self.num_entries_x,self.num_entries_y)
-        self.readMenuFile()
         self.menuEntries.settings(self.borders,self.gap_x,self.gap_y,self.menu_size_x,self.menu_size_y)
+        self.readMenuFile()
         if (self.use_sound):
             self.setupSounds()
+        #TODO make more robust - not uploading a backgorund
+        self.background = pygame.image.load("resources/images/background.jpg")
+        self.background = pygame.transform.scale(self.background,(self.screen_size_x,self.screen_size_y))
 
         pygame.init()
         
         # Set the height and width of the screen
         size=[self.screen_size_x,self.screen_size_y]
-        self.screen=pygame.display.set_mode(size,pygame.FULLSCREEN)
+        self.screen=pygame.display.set_mode(size,pygame.FULLSCREEN|pygame.NOFRAME)
+        #self.screen=pygame.display.set_mode(size)
         pygame.display.set_caption("GameMenu")
         # Used to manage how fast the screen updates
         self.clock=pygame.time.Clock()
@@ -55,7 +59,7 @@ class GameMenu():
         self.gap_x = 20
         self.gap_y = 20
         
-        self.borders = 300
+        self.borders = 100
         #self.border_top = 50
         #self.border_bottom = 50
         #self.border_left = 50
@@ -119,11 +123,12 @@ class GameMenu():
         menuFile=open("gameMenu.csv")
         csvreader = csv.reader(menuFile)
         for line in csvreader:
-            self.menuEntries.add(line[0],line[1])
+            self.menuEntries.add(line[0],line[1],line[2])
         #exit()
 
     def draw(self):
         #Draw Background
+        self.screen.blit(self.background,(0,0))
         self.menuEntries.draw(self.screen)
         pygame.display.flip()
         
