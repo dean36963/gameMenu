@@ -6,6 +6,7 @@ import pygame
 import csv
 import menuEntry
 import time
+import os
 
 class GameMenu():
     def __init__(self):
@@ -21,8 +22,11 @@ class GameMenu():
         self.menuEntries = menuEntry.MenuEntry(self.num_entries_x,self.num_entries_y)
         self.readMenuFile()
         self.menuEntries.settings(self.borders,self.gap_x,self.gap_y,self.menu_size_x,self.menu_size_y)
+        if (self.use_sound):
+            self.setupSounds()
 
         pygame.init()
+        
         # Set the height and width of the screen
         size=[self.screen_size_x,self.screen_size_y]
         self.screen=pygame.display.set_mode(size,pygame.FULLSCREEN)
@@ -33,6 +37,8 @@ class GameMenu():
     def get_settings(self):
         #Replace with reading settings file
         print "Using Default Settings"
+        self.use_sound = True
+        self.sound_dir = "resources/sounds"
         #self.screen_size_x = 640
         #self.screen_size_y = 480
         self.screen_size_x = 1920
@@ -71,15 +77,28 @@ class GameMenu():
             joy_input = self.joy.get_input()
             if (joy_input[5]<-0.5):
                 self.menuEntries.move_left()
+                if (self.use_sound):
+                    self.sounds["move"].play()
             if (joy_input[5]>0.5):
                 self.menuEntries.move_right()
+                if (self.use_sound):
+                    self.sounds["move"].play()
             if (joy_input[6]<-0.5):
                 self.menuEntries.move_up()
+                if (self.use_sound):
+                    self.sounds["move"].play()
             if (joy_input[6]>0.5):
                 self.menuEntries.move_down()
+                if (self.use_sound):
+                    self.sounds["move"].play()
             if (joy_input[1]==1):
+                if (self.use_sound):
+                    self.sounds["exit"].play()
+                    time.sleep(0.5)
                 loop=False
             if (joy_input[0]==1):
+                if (self.use_sound):
+                    self.sounds["select"].play()
                 self.launch()
                 
     def launch(self):
@@ -107,6 +126,23 @@ class GameMenu():
         #Draw Background
         self.menuEntries.draw(self.screen)
         pygame.display.flip()
+        
+    def setupSounds(self):
+        pygame.mixer.init(frequency=22050, size=8, channels=2, buffer=65000)
+        self.sounds = dict()
+        
+        if (os.path.exists(self.sound_dir+"/move.ogg") and os.path.exists(self.sound_dir+"/select.ogg") and os.path.exists(self.sound_dir+"/exit.ogg")):
+            self.sounds["move"] = pygame.mixer.Sound("resources/sounds/move.ogg")
+            self.sounds["select"] = pygame.mixer.Sound("resources/sounds/select.ogg")
+            self.sounds["exit"] = pygame.mixer.Sound("resources/sounds/exit.ogg")
+            self.sounds["select"].play()
+        else:
+            print "Could not find sound files: move.ogg select.ogg exit.ogg"
+            print "To enable sound, add them to resources/sounds/"
+            self.use_sound = False
+
+        
+        
         
 if __name__=="__main__":
     gm = GameMenu()
