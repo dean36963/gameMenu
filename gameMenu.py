@@ -122,7 +122,8 @@ class GameMenu():
                     self.menuEntries.stop()
                     loop=False
                 time.sleep(self.tick)
-        self.sounds["exit"].play()
+        if (self.use_sound):
+            self.sounds["exit"].play()
         
     def __run__(self):
         self.menuEntries.launch()
@@ -142,10 +143,10 @@ class GameMenu():
         pygame.display.flip()
         
     def setupSounds(self):
-        pygame.mixer.init(frequency=22050, size=8, channels=2, buffer=65000)
         self.sounds = dict()
         
         if (os.path.exists(self.sound_dir+"/move.ogg") and os.path.exists(self.sound_dir+"/select.ogg") and os.path.exists(self.sound_dir+"/exit.ogg")):
+            pygame.mixer.init(frequency=22050, size=8, channels=2, buffer=65000)
             self.sounds["move"] = pygame.mixer.Sound("resources/sounds/move.ogg")
             self.sounds["select"] = pygame.mixer.Sound("resources/sounds/select.ogg")
             self.sounds["exit"] = pygame.mixer.Sound("resources/sounds/exit.ogg")
