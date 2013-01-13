@@ -113,14 +113,17 @@ class MenuEntry:
             self.active_y-=1
 
     def launch(self):
+        pygame.display.toggle_fullscreen()
         command = str(self.data[self.positions.index([self.active_x,self.active_y])][2])
         cmds = shlex.split(command)
         self.process = subprocess.Popen(cmds,stdin=subprocess.PIPE)
 
     def stop(self):
         self.process.terminate()
+        pygame.display.toggle_fullscreen()
         
     def wait(self):
         self.process.wait()
+        pygame.display.toggle_fullscreen()
 
             

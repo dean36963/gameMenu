@@ -25,15 +25,18 @@ class GameMenu():
         if (self.use_sound):
             self.setupSounds()
         #TODO make more robust - not uploading a backgorund
-        self.background = pygame.image.load("resources/images/background.jpg")
-        self.background = pygame.transform.scale(self.background,(self.screen_size_x,self.screen_size_y))
+        if (os.path.exists(self.image_dir+"/background.jpg")):
+            self.background = pygame.image.load("resources/images/background.jpg")
+            self.background = pygame.transform.scale(self.background,(self.screen_size_x,self.screen_size_y))
+            self.use_background=True
+        else:
+            self.use_background = False
 
         pygame.init()
         
         # Set the height and width of the screen
         size=[self.screen_size_x,self.screen_size_y]
         self.screen=pygame.display.set_mode(size,pygame.FULLSCREEN|pygame.NOFRAME)
-        #self.screen=pygame.display.set_mode(size)
         pygame.display.set_caption("GameMenu")
         # Used to manage how fast the screen updates
         self.clock=pygame.time.Clock()
@@ -43,6 +46,7 @@ class GameMenu():
         print "Using Default Settings"
         self.use_sound = True
         self.sound_dir = "resources/sounds"
+        self.image_dir = "resources/images"
         #self.screen_size_x = 640
         #self.screen_size_y = 480
         self.screen_size_x = 1920
@@ -118,6 +122,7 @@ class GameMenu():
                     self.menuEntries.stop()
                     loop=False
                 time.sleep(self.tick)
+        self.sounds["exit"].play()
         
     def __run__(self):
         self.menuEntries.launch()
@@ -131,7 +136,8 @@ class GameMenu():
 
     def draw(self):
         #Draw Background
-        self.screen.blit(self.background,(0,0))
+        if (self.use_background==True):
+            self.screen.blit(self.background,(0,0))
         self.menuEntries.draw(self.screen)
         pygame.display.flip()
         
