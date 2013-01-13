@@ -10,6 +10,7 @@ import time
 class GameMenu():
     def __init__(self):
         print "Starting Menu"
+        self.fail=False
         self.joy=joystick.Joystick()
         if (self.joy.errors!=[]):
             for error in self.joy.errors:
