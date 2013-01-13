@@ -25,7 +25,7 @@ class GameMenu():
         pygame.init()
         # Set the height and width of the screen
         size=[self.screen_size_x,self.screen_size_y]
-        self.screen=pygame.display.set_mode(size)
+        self.screen=pygame.display.set_mode(size,pygame.FULLSCREEN)
         pygame.display.set_caption("GameMenu")
         # Used to manage how fast the screen updates
         self.clock=pygame.time.Clock()
@@ -33,8 +33,10 @@ class GameMenu():
     def get_settings(self):
         #Replace with reading settings file
         print "Using Default Settings"
-        self.screen_size_x = 640
-        self.screen_size_y = 480
+        #self.screen_size_x = 640
+        #self.screen_size_y = 480
+        self.screen_size_x = 1920
+        self.screen_size_y = 1080
         
         self.frames_per_second = 5
         self.tick = 1.0 / self.frames_per_second
@@ -47,7 +49,7 @@ class GameMenu():
         self.gap_x = 20
         self.gap_y = 20
         
-        self.borders = 50
+        self.borders = 300
         #self.border_top = 50
         #self.border_bottom = 50
         #self.border_left = 50
