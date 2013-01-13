@@ -69,6 +69,8 @@ class GameMenu():
         self.menu_size_x = ( self.screen_size_x - self.gap_x * (self.num_entries_x - 1) - 2*self.borders ) / self.num_entries_x
         self.menu_size_y = ( self.screen_size_y - self.gap_y * (self.num_entries_y - 1) - 2*self.borders ) / self.num_entries_y
         
+        self.terminate=False
+        
         
     def start(self):
         if (self.fail==True):
@@ -107,14 +109,15 @@ class GameMenu():
                 
     def launch(self):
         self.menuEntries.launch()
-        loop=True
-        print "stop"
-        while (loop):
-            print "looping press x to quit"
-            if ( self.joy.get_input()[4]):
-                self.menuEntries.stop()
-                loop=False
-            time.sleep(self.tick)
+        if (self.terminate==False):
+            self.menuEntries.wait()
+        else:
+            loop=True
+            while (loop):
+                if ( self.joy.get_input()[4]):
+                    self.menuEntries.stop()
+                    loop=False
+                time.sleep(self.tick)
         
     def __run__(self):
         self.menuEntries.launch()

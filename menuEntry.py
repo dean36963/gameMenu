@@ -115,10 +115,12 @@ class MenuEntry:
     def launch(self):
         command = str(self.data[self.positions.index([self.active_x,self.active_y])][2])
         cmds = shlex.split(command)
-        self.process = subprocess.Popen(cmds)
+        self.process = subprocess.Popen(cmds,stdin=subprocess.PIPE)
 
     def stop(self):
-        self.process.kill()
-            
-            
+        self.process.terminate()
+        
+    def wait(self):
+        self.process.wait()
+
             
