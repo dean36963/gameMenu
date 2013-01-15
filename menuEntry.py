@@ -13,6 +13,7 @@ class MenuEntry:
         self.max_x = max_x
         self.max_y = max_y
         self.page=1
+        self.max_page=1
         self.id=0
         self.scale_factor=0.8
         self.menu_img = pygame.image.load("resources/images/menuItem.png")
@@ -24,7 +25,9 @@ class MenuEntry:
             if (self.y < self.max_y):
                 self.y += 1
             else:
-                return
+                self.page+=1
+                self.y=1
+                self.max_page=self.page
         else:
             self.x +=1
         if(os.path.exists(icon)):
@@ -42,7 +45,7 @@ class MenuEntry:
             img=img = pygame.Surface((1,1))
             use_icon=False
         self.data.append([self.id,title,cmd,img,use_icon])
-        self.positions.append([self.x,self.y])
+        self.positions.append([self.x,self.y,self.page])
         if (self.count==0):
             self.active_x=1
             self.active_y=1
@@ -51,7 +54,10 @@ class MenuEntry:
         print self.data
         print self.positions
         
-    def get_x(self,i):
+    def defined(self):
+        self.page=1
+    
+    def get_id(self,i):
         return self.data[i][0]
     
     def get_y(self,i):
@@ -77,44 +83,68 @@ class MenuEntry:
         print str(self.active_x)
         for item in self.data:
             itemid = item[0]
-            x = self.positions[itemid][0]
-            y = self.positions[itemid][1]
-            start_x = self.borders + (x-1)*self.menu_size_x + (x-1)*self.gap_x
-            start_y = self.borders + (y-1)*self.menu_size_y + (y-1)*self.gap_y
-            screen.blit(self.menu_img,(start_x,start_y))
-            if (x==self.active_x and y==self.active_y):
-                screen.blit(self.menu_img_selected,(start_x,start_y))
-            title=item[1]
-            font = pygame.font.Font(None, 20)
-            text = font.render(title, True, [0,0,0])
-            textRect = text.get_rect()
-            textRect.x = start_x + 0.5*(self.menu_size_x-textRect.width)
-            textRect.y = start_y + self.menu_size_y - 1.5*textRect.height
-            screen.blit(text, textRect)
-            use_icon = item[4]
-            icon = item[3]
-            if (use_icon):
-                ico_start_x = 0.5*(self.menu_size_x-icon.get_width())+start_x
-                ico_start_y = 0.5*(self.menu_size_y-icon.get_height())+start_y
-                screen.blit(icon,(ico_start_x,ico_start_y))
+            if self.positions[itemid][2] == self.page:
+                x = self.positions[itemid][0]
+                y = self.positions[itemid][1]
+                start_x = self.borders + (x-1)*self.menu_size_x + (x-1)*self.gap_x
+                start_y = self.borders + (y-1)*self.menu_size_y + (y-1)*self.gap_y
+                screen.blit(self.menu_img,(start_x,start_y))
+                if (x==self.active_x and y==self.active_y):
+                    screen.blit(self.menu_img_selected,(start_x,start_y))
+                title=item[1]
+                font = pygame.font.Font(None, 20)
+                text = font.render(title, True, [0,0,0])
+                textRect = text.get_rect()
+                textRect.x = start_x + 0.5*(self.menu_size_x-textRect.width)
+                textRect.y = start_y + self.menu_size_y - 1.5*textRect.height
+                screen.blit(text, textRect)
+                use_icon = item[4]
+                icon = item[3]
+                if (use_icon):
+                    ico_start_x = 0.5*(self.menu_size_x-icon.get_width())+start_x
+                    ico_start_y = 0.5*(self.menu_size_y-icon.get_height())+start_y
+                    screen.blit(icon,(ico_start_x,ico_start_y))
 
                 
     def move_left(self):
-        if (self.positions.count([self.active_x-1,self.active_y])>0):
+        if (self.positions.count([self.active_x-1,self.active_y,self.page])>0):
             self.active_x-=1
     def move_right(self):
-        if (self.positions.count([self.active_x+1,self.active_y])>0):
+        if (self.positions.count([self.active_x+1,self.active_y,self.page])>0):
             self.active_x+=1
     def move_down(self):
-        if (self.positions.count([self.active_x,self.active_y+1])>0):
+        if (self.positions.count([self.active_x,self.active_y+1,self.page])>0):
             self.active_y+=1
     def move_up(self):
-        if (self.positions.count([self.active_x,self.active_y-1])>0):
+        if (self.positions.count([self.active_x,self.active_y-1,self.page])>0):
             self.active_y-=1
+    def prev_page(self):
+        if (self.page>1):
+            self.page-=1
+            #If there is a previous page then it is full, don't reset position
+    def next_page(self):
+        if (self.page < self.max_page):
+            self.page+=1
+            selected_item=False
+            while (not selected_item):
+                if (self.positions.count([self.active_x,self.active_y,self.page])==0):
+                    #Then currently highlightling a dead zone!!!
+                    if(self.active_x==1):
+                        self.active_x=self.max_x
+                        if(self.active_y==1):
+                            print "Blank Page?"
+                        else:
+                            self.active_y-=1
+                    else:
+                        self.active_x-=1
+                else:
+                    selected_item=True
+                
+            
 
     def launch(self):
         pygame.display.toggle_fullscreen()
-        command = str(self.data[self.positions.index([self.active_x,self.active_y])][2])
+        command = str(self.data[self.positions.index([self.active_x,self.active_y,self.page])][2])
         cmds = shlex.split(command)
         self.process = subprocess.Popen(cmds,stdin=subprocess.PIPE)
 

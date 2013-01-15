@@ -22,6 +22,7 @@ class GameMenu():
         self.menuEntries = menuEntry.MenuEntry(self.num_entries_x,self.num_entries_y)
         self.menuEntries.settings(self.borders,self.gap_x,self.gap_y,self.menu_size_x,self.menu_size_y)
         self.readMenuFile()
+        self.menuEntries.defined()
         if (self.use_sound):
             self.setupSounds()
         #TODO make more robust - not uploading a backgorund
@@ -85,6 +86,15 @@ class GameMenu():
             self.draw()
             time.sleep(self.tick)
             joy_input = self.joy.get_input()
+            if (joy_input[1]==1):
+                if (self.use_sound):
+                    self.sounds["exit"].play()
+                    time.sleep(0.5)
+                loop=False
+            if (joy_input[0]==1):
+                if (self.use_sound):
+                    self.sounds["select"].play()
+                self.launch()
             if (joy_input[5]<-0.5):
                 self.menuEntries.move_left()
                 if (self.use_sound):
@@ -101,15 +111,16 @@ class GameMenu():
                 self.menuEntries.move_down()
                 if (self.use_sound):
                     self.sounds["move"].play()
-            if (joy_input[1]==1):
+            if (joy_input[2]==1):
+                self.menuEntries.prev_page()
                 if (self.use_sound):
-                    self.sounds["exit"].play()
-                    time.sleep(0.5)
-                loop=False
-            if (joy_input[0]==1):
+                    self.sounds["move"].play()
+            if (joy_input[3]==1):
+                self.menuEntries.next_page()
                 if (self.use_sound):
-                    self.sounds["select"].play()
-                self.launch()
+                    self.sounds["move"].play()
+            
+            
                 
     def launch(self):
         self.menuEntries.launch()
@@ -124,6 +135,8 @@ class GameMenu():
                 time.sleep(self.tick)
         if (self.use_sound):
             self.sounds["exit"].play()
+        pygame.event.clear()
+        time.sleep(1)
         
     def __run__(self):
         self.menuEntries.launch()
