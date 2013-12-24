@@ -51,8 +51,8 @@ class MenuEntry:
             self.active_y=1
         self.count += 1
         self.id+=1
-        print self.data
-        print self.positions
+        #print self.data
+        #print self.positions
         
     def defined(self):
         self.page=1
@@ -80,7 +80,7 @@ class MenuEntry:
         self.menu_img_selected = pygame.transform.scale(self.menu_img_selected,(self.menu_size_x,self.menu_size_y))
     
     def draw(self,screen):
-        print str(self.active_x)
+        #print str(self.active_x)
         for item in self.data:
             itemid = item[0]
             if self.positions[itemid][2] == self.page:
@@ -143,17 +143,17 @@ class MenuEntry:
             
 
     def launch(self):
-        pygame.display.toggle_fullscreen()
+        #pygame.display.toggle_fullscreen()
         command = str(self.data[self.positions.index([self.active_x,self.active_y,self.page])][2])
         cmds = shlex.split(command)
         self.process = subprocess.Popen(cmds,stdin=subprocess.PIPE)
 
     def stop(self):
         self.process.terminate()
-        pygame.display.toggle_fullscreen()
+        #pygame.display.toggle_fullscreen()
         
     def wait(self):
         self.process.wait()
-        pygame.display.toggle_fullscreen()
+        #pygame.display.toggle_fullscreen()
 
             
