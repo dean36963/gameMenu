@@ -6,6 +6,7 @@ import menuEntry
 import time
 import os
 import pyinotify
+import menuChanged
 from pygame.locals import *
 
 class GameMenu():
@@ -25,7 +26,6 @@ class GameMenu():
 		self.menuEntries.settings(self.borders,self.gap_x,self.gap_y,self.menu_size_x,self.menu_size_y)
 		self.readMenuFile()
 		self.menuEntries.defined()
-		self.init_watcher()
 		if (self.use_sound):
 			self.setupSounds()
 		#TODO make more robust - not uploading a backgorund
@@ -35,13 +35,14 @@ class GameMenu():
 			self.use_background=True
 		else:
 			self.use_background = False
+		self.init_filewatcher()
 
 		pygame.init()
 		
 		# Set the height and width of the screen
 		size=[self.screen_size_x,self.screen_size_y]
-		self.screen=pygame.display.set_mode(size,pygame.NOFRAME)
-		#self.screen=pygame.display.set_mode(size,pygame.FULLSCREEN|pygame.NOFRAME)
+		#self.screen=pygame.display.set_mode(size,pygame.NOFRAME)
+		self.screen=pygame.display.set_mode(size,pygame.FULLSCREEN|pygame.NOFRAME)
 		pygame.display.set_caption("GameMenu")
 		# Used to manage how fast the screen updates
 		self.clock=pygame.time.Clock()
@@ -52,8 +53,10 @@ class GameMenu():
 		self.use_sound = True
 		self.sound_dir = "resources/sounds"
 		self.image_dir = "resources/images"
-		self.screen_size_x = 640
-		self.screen_size_y = 480
+		self.screen_size_x = 1024
+		self.screen_size_y = 600
+		#self.screen_size_x = 640
+		#self.screen_size_y = 480
 		#self.screen_size_x = 1920
 		#self.screen_size_y = 1080
 		
@@ -63,6 +66,7 @@ class GameMenu():
 		self.num_entries_x = 4
 		self.num_entries_y = 3
 		self.num_pages = 2
+		self.menuFile = '/srv/gameEditor/gameMenu.csv'
 		
 		#Gap between menu entries
 		self.gap_x = 20
@@ -128,7 +132,12 @@ class GameMenu():
 				self.menuEntries.next_page()
 				if (self.use_sound):
 					self.sounds["move"].play()
+		self.quit()
 			
+
+	def quit(self):
+		self.watcher.kill()
+		exit()
 			
 				
 	def launch(self):
@@ -153,11 +162,10 @@ class GameMenu():
 		self.menuEntries.launch()
 		
 	def readMenuFile(self):
-		menuFile=open("gameMenu.csv")
+		menuFile=open(self.menuFile)
 		csvreader = csv.reader(menuFile)
 		for line in csvreader:
 			self.menuEntries.add(line[0],line[1],line[2])
-		#exit()
 
 	def draw(self):
 		#Draw Background
@@ -187,7 +195,7 @@ class GameMenu():
 				if (self.use_sound):
 					self.sounds["exit"].play()
 					time.sleep(0.5)
-				exit()
+				self.quit()
 			if event.type == KEYDOWN and event.key == K_RETURN:
 				if (self.use_sound):
 					self.sounds["select"].play()
@@ -216,7 +224,12 @@ class GameMenu():
 				self.menuEntries.next_page()
 				if (self.use_sound):
 					self.sounds["move"].play()
+	def rereadMenuFile(self):
+		self.menuEntries.clear()
+		self.readMenuFile()
 		
+	def init_filewatcher(self):
+		self.watcher=menuChanged.EventManager(self.menuFile,self.rereadMenuFile)
 
 if __name__=="__main__":
 	gm = GameMenu()
