@@ -27,6 +27,7 @@ class GameMenu():
 		self.menuEntries = menuEntry.MenuEntry(self.num_entries_x,self.num_entries_y)
 		self.menuEntries.settings(self.borders,self.gap_x,self.gap_y,self.menu_size_x,self.menu_size_y)
 		self.readMenuFile()
+		self.menuOutOfDate=False
 		self.menuEntries.defined()
 		if (self.use_sound):
 			self.setupSounds()
@@ -98,6 +99,8 @@ class GameMenu():
 			return
 		loop=True
 		while (loop):
+			if (self.menuOutOfDate==True):
+				self.rereadMenuFile()
 			self.draw()
 			time.sleep(self.tick)
 			if (self.use_joystick == True):
@@ -233,11 +236,18 @@ class GameMenu():
 				if (self.use_sound):
 					self.sounds["move"].play()
 	def rereadMenuFile(self):
-		self.menuEntries.clear()
+		self.menuEntries = menuEntry.MenuEntry(self.num_entries_x,self.num_entries_y)
+		self.menuEntries.settings(self.borders,self.gap_x,self.gap_y,self.menu_size_x,self.menu_size_y)
 		self.readMenuFile()
+		self.menuOutOfDate=False
+		#self.menuEntries.clear()
+		#self.readMenuFile()
+
+	def rereadNextDraw(self):
+		self.menuOutOfDate=True
 		
 	def init_filewatcher(self):
-		self.watcher=menuChanged.EventManager(self.menuFile,self.rereadMenuFile)
+		self.watcher=menuChanged.EventManager(self.menuFile,self.rereadNextDraw)
 
 if __name__=="__main__":
 	gm = GameMenu()
