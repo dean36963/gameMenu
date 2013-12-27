@@ -115,7 +115,7 @@ class MenuEntry:
 					screen.blit(icon,(ico_start_x,ico_start_y))
 				title=item[1]
 				font = pygame.font.Font(None, 20)
-				text = fonts.textOutline(font,title,[0,0,0],[255,255,255])
+				text = fonts.textOutline(font,title,[10,10,10],[255,255,255])
 				#text = font.render(title, True, [0,0,0])
 				textRect = text.get_rect()
 				textRect.x = start_x + 0.5*(self.menu_size_x-textRect.width)
