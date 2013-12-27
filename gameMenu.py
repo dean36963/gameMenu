@@ -8,6 +8,7 @@ import os
 import pyinotify
 import menuChanged
 import netutils
+import qr
 from pygame.locals import *
 
 class GameMenu():
@@ -40,6 +41,8 @@ class GameMenu():
 		iptool = netutils.ip_tool()
 		self.ip = iptool.get_ip()
 		print "Detected IP as", self.ip
+		self.qrip = qr.QRImage('http://'+self.ip)
+		self.qrip.prepare()
 
 		pygame.init()
 		
@@ -176,6 +179,7 @@ class GameMenu():
 		if (self.use_background==True):
 			self.screen.blit(self.background,(0,0))
 		self.menuEntries.draw(self.screen)
+		self.qrip.draw(self.screen)
 		pygame.display.flip()
 		
 	def setupSounds(self):
