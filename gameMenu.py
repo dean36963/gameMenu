@@ -7,6 +7,7 @@ import time
 import os
 import pyinotify
 import menuChanged
+import netutils
 from pygame.locals import *
 
 class GameMenu():
@@ -36,6 +37,9 @@ class GameMenu():
 		else:
 			self.use_background = False
 		self.init_filewatcher()
+		iptool = netutils.ip_tool()
+		self.ip = iptool.get_ip()
+		print "Detected IP as", self.ip
 
 		pygame.init()
 		

@@ -2,6 +2,7 @@ import pygame
 import subprocess
 import shlex
 import os
+import fonts
 
 class MenuEntry:
 	def __init__(self,max_x,max_y):
@@ -106,19 +107,20 @@ class MenuEntry:
 				screen.blit(self.menu_img,(start_x,start_y))
 				if (x==self.active_x and y==self.active_y):
 					screen.blit(self.menu_img_selected,(start_x,start_y))
-				title=item[1]
-				font = pygame.font.Font(None, 20)
-				text = font.render(title, True, [0,0,0])
-				textRect = text.get_rect()
-				textRect.x = start_x + 0.5*(self.menu_size_x-textRect.width)
-				textRect.y = start_y + self.menu_size_y - 1.5*textRect.height
-				screen.blit(text, textRect)
 				use_icon = item[4]
 				icon = item[3]
 				if (use_icon):
 					ico_start_x = 0.5*(self.menu_size_x-icon.get_width())+start_x
 					ico_start_y = 0.5*(self.menu_size_y-icon.get_height())+start_y
 					screen.blit(icon,(ico_start_x,ico_start_y))
+				title=item[1]
+				font = pygame.font.Font(None, 20)
+				text = fonts.textOutline(font,title,[0,0,0],[255,255,255])
+				#text = font.render(title, True, [0,0,0])
+				textRect = text.get_rect()
+				textRect.x = start_x + 0.5*(self.menu_size_x-textRect.width)
+				textRect.y = start_y + self.menu_size_y - 1.5*textRect.height
+				screen.blit(text, textRect)
 
 				
 	def move_left(self):
