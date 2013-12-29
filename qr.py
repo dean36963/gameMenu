@@ -5,9 +5,9 @@ import pygame
 class QRImage:
 	def __init__(self,stringValue):
 		self.image = qrencode.encode(stringValue)[2]
-		self.image.save('qr.png')
+		self.image.save('resources/images/qr.png')
 	def prepare(self):
-		self.image_surface = pygame.image.load('qr.png')
+		self.image_surface = pygame.image.load('resources/images/qr.png')
 		self.image_surface = pygame.transform.scale(self.image_surface,(100,100))
 	def draw (self,screen):
 		border = pygame.Surface((110,110))
