@@ -9,6 +9,7 @@ import pyinotify
 import menuChanged
 import netutils
 import qr
+import fonts
 from pygame.locals import *
 
 class GameMenu():
@@ -44,8 +45,10 @@ class GameMenu():
 		print "Detected IP as", self.ip
 		self.qrip = qr.QRImage('http://'+self.ip)
 		self.qrip.prepare()
-
 		pygame.init()
+		font = pygame.font.Font(None, 20)
+		self.iptext = fonts.textOutline(font,"To configure games go to "+self.ip+" or use the QR code.",[10,10,10],[255,255,255])
+
 		
 		# Set the height and width of the screen
 		size=[self.screen_size_x,self.screen_size_y]
@@ -183,6 +186,7 @@ class GameMenu():
 			self.screen.blit(self.background,(0,0))
 		self.menuEntries.draw(self.screen)
 		self.qrip.draw(self.screen)
+		self.screen.blit(self.iptext,(((self.screen.get_width()-self.iptext.get_width())*.5),self.screen.get_height()-self.iptext.get_height()))
 		pygame.display.flip()
 		
 	def setupSounds(self):

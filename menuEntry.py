@@ -123,7 +123,6 @@ class MenuEntry:
 
 				
 	def move_left(self):
-		print self.active_x , self.active_y
 		if (self.positions.count([self.active_x-1,self.active_y,self.page])>0):
 			self.active_x-=1
 	def move_right(self):
