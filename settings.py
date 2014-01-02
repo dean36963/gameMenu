@@ -40,6 +40,11 @@ class Settings():
 	def set(self,property_name,value):
 		self.__data__[property_name] = value
 
+	def false(self):
+		return ['N','No','n','0','False']
+	def true(self):
+		return ['Y','Yes','y','1','True']
+
 if __name__ == '__main__':
 	print "Running this shit"
 	s = Settings('test.properties')

@@ -20,7 +20,7 @@ class GameMenu():
 		#Should read settings first
 		self.get_settings()
 
-		if self.settings.get('useJoystick') not in ['N','No','False']:
+		if self.settings.get('useJoystick') not in self.settings.false():
 			self.joy=joystick.Joystick()
 			if (self.joy.errors!=[]):
 				for error in self.joy.errors:
@@ -59,7 +59,10 @@ class GameMenu():
 		# Set the height and width of the screen
 		size=[self.screen_size_x,self.screen_size_y]
 		#self.screen=pygame.display.set_mode(size,pygame.NOFRAME)
-		self.screen=pygame.display.set_mode(size,pygame.FULLSCREEN|pygame.NOFRAME)
+		if self.settings.get('fullscreen') in self.settings.true():
+			self.screen=pygame.display.set_mode(size,pygame.FULLSCREEN|pygame.NOFRAME)
+		else:
+			self.screen=pygame.display.set_mode(size,pygame.NOFRAME)
 		pygame.display.set_caption("GameMenu")
 		# Used to manage how fast the screen updates
 		self.clock=pygame.time.Clock()
