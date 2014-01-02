@@ -67,13 +67,9 @@ class GameMenu():
 	def get_settings(self):
 		self.settings = Settings('local.properties')
 		self.settings.print_data()
-		#Replace with reading settings file
-		print "Using Default Settings"
 		self.screen_size_x = int(self.settings.get('screen_size_x'))
 		self.screen_size_y = int(self.settings.get('screen_size_y'))
-		
-		self.frames_per_second = 5
-		self.tick = 1.0 / self.frames_per_second
+		self.tick = 1.0 / float(self.settings.get('frames_per_second'))
 		
 		self.num_entries_x = 4
 		self.num_entries_y = 3
