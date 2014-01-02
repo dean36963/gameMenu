@@ -19,7 +19,7 @@ class Settings():
 	def __parse_line__(self,line):
 		if line.strip().startswith('#'):
 			pass
-		if '=' in line:
+		elif '=' in line:
 			property_name,property_value = line.split('=')
 			property_name = property_name.strip()
 			property_value = property_value.strip()

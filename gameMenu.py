@@ -84,8 +84,6 @@ class GameMenu():
 		self.num_entries_x = 4
 		self.num_entries_y = 3
 		self.num_pages = 2
-		#self.menuFile = '/srv/gameEditor/gameMenu.csv'
-		self.menuFile = 'gameMenu.csv'
 		
 		#Gap between menu entries
 		self.gap_x = 20
@@ -183,7 +181,7 @@ class GameMenu():
 		self.menuEntries.launch()
 		
 	def readMenuFile(self):
-		menuFile=open(self.menuFile)
+		menuFile=open(self.settings.get('menuFile'))
 		csvreader = csv.reader(menuFile)
 		for line in csvreader:
 			self.menuEntries.add(line[0],line[1],line[2])
@@ -259,7 +257,7 @@ class GameMenu():
 		self.menuOutOfDate=True
 		
 	def init_filewatcher(self):
-		self.watcher=menuChanged.EventManager(self.menuFile,self.rereadNextDraw)
+		self.watcher=menuChanged.EventManager(self.settings.get('menuFile'),self.rereadNextDraw)
 
 if __name__=="__main__":
 	gm = GameMenu()
