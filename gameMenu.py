@@ -39,8 +39,8 @@ class GameMenu():
 		self.menuEntries.defined()
 		if (self.settings.get('use_sound')):
 			self.setupSounds()
-		if (os.path.exists(self.image_dir+"/background.jpg")):
-			self.background = pygame.image.load("resources/images/background.jpg")
+		if (os.path.exists(self.settings.get('image_dir')+"/background.jpg")):
+			self.background = pygame.image.load(os.path.join(self.settings.get('image_dir'),"background.jpg"))
 			self.background = pygame.transform.scale(self.background,(self.screen_size_x,self.screen_size_y))
 			self.use_background=True
 		else:
@@ -69,8 +69,6 @@ class GameMenu():
 		self.settings.print_data()
 		#Replace with reading settings file
 		print "Using Default Settings"
-		self.sound_dir = "resources/sounds"
-		self.image_dir = "resources/images"
 		self.screen_size_x = int(self.settings.get('screen_size_x'))
 		self.screen_size_y = int(self.settings.get('screen_size_y'))
 		
@@ -194,11 +192,11 @@ class GameMenu():
 	def setupSounds(self):
 		self.sounds = dict()
 		
-		if (os.path.exists(self.sound_dir+"/move.ogg") and os.path.exists(self.sound_dir+"/select.ogg") and os.path.exists(self.sound_dir+"/exit.ogg")):
+		if (os.path.exists(self.settings.get('sound_dir')+"/move.ogg") and os.path.exists(self.settings.get('sound_dir')+"/select.ogg") and os.path.exists(self.settings.get('sound_dir')+"/exit.ogg")):
 			pygame.mixer.init(frequency=22050, size=8, channels=2, buffer=65000)
-			self.sounds["move"] = pygame.mixer.Sound("resources/sounds/move.ogg")
-			self.sounds["select"] = pygame.mixer.Sound("resources/sounds/select.ogg")
-			self.sounds["exit"] = pygame.mixer.Sound("resources/sounds/exit.ogg")
+			self.sounds["move"] = pygame.mixer.Sound(os.path.join(self.settings.get('sound_dir'),"move.ogg"))
+			self.sounds["select"] = pygame.mixer.Sound(os.path.join(self.settings.get('sound_dir'),"select.ogg"))
+			self.sounds["exit"] = pygame.mixer.Sound(os.path.join(self.settings.get('sound_dir'),"exit.ogg"))
 			self.sounds["select"].play()
 		else:
 			print "Could not find sound files: move.ogg select.ogg exit.ogg"
