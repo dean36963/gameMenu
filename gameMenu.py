@@ -71,12 +71,8 @@ class GameMenu():
 		print "Using Default Settings"
 		self.sound_dir = "resources/sounds"
 		self.image_dir = "resources/images"
-		#self.screen_size_x = 1024
-		#self.screen_size_y = 600
-		#self.screen_size_x = 640
-		#self.screen_size_y = 480
-		self.screen_size_x = 1920
-		self.screen_size_y = 1080
+		self.screen_size_x = int(self.settings.get('screen_size_x'))
+		self.screen_size_y = int(self.settings.get('screen_size_y'))
 		
 		self.frames_per_second = 5
 		self.tick = 1.0 / self.frames_per_second
